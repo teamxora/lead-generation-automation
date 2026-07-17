@@ -1,0 +1,2356 @@
+{
+  "name": "Team Xora Lead generation system",
+  "nodes": [
+    {
+      "parameters": {
+        "pollTimes": {
+          "item": [
+            {
+              "mode": "everyMinute"
+            }
+          ]
+        },
+        "documentId": {
+          "__rl": true,
+          "value": "1Z9CcAzUA4njOdvHVtm2-r3OaIUdEhXfDUz46KKUXPG0",
+          "mode": "list",
+          "cachedResultName": "Business Automation Consultation Request Form (Responses)",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1Z9CcAzUA4njOdvHVtm2-r3OaIUdEhXfDUz46KKUXPG0/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 1921748360,
+          "mode": "list",
+          "cachedResultName": "Form responses 1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1Z9CcAzUA4njOdvHVtm2-r3OaIUdEhXfDUz46KKUXPG0/edit#gid=1921748360"
+        },
+        "event": "rowAdded",
+        "options": {}
+      },
+      "id": "58a2b336-843b-43e3-86c2-482a18108adf",
+      "name": "Google Sheets Trigger",
+      "type": "n8n-nodes-base.googleSheetsTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        384
+      ],
+      "credentials": {
+        "googleSheetsTriggerOAuth2Api": {
+          "id": "981MIJQkHLeBKl50",
+          "name": "Google Sheets Trigger OAuth2 API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "e9f4324b-5180-43a8-9aea-d3ca4dd8da9b",
+              "leftValue": "={{ $json[\"Full Name\"] }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            },
+            {
+              "id": "adb688c3-67d8-4e51-823b-a959635eaf0d",
+              "leftValue": "={{ $json[\"Phone Number\"] }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            },
+            {
+              "id": "a5fed87b-5f08-4f5b-846a-f1748a85e4da",
+              "leftValue": "={{ $json[\"Business Email Address\"] }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "f3abf68a-ecb2-474f-ae2f-4094c8ca39cd",
+      "name": "Validate Required Fields",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        224,
+        384
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "19f2ecaf-79db-40e6-aab5-b0d779451ba5",
+              "leftValue": "={{ String($json[\"Business Email Address\"]) }}",
+              "rightValue": "@",
+              "operator": {
+                "type": "string",
+                "operation": "contains"
+              }
+            },
+            {
+              "id": "faad71a9-01cc-45bf-b4ac-a94758d189a7",
+              "leftValue": "={{ String($json[\"Business Email Address\"]) }}",
+              "rightValue": ".com",
+              "operator": {
+                "type": "string",
+                "operation": "endsWith"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "looseTypeValidation": true,
+        "options": {}
+      },
+      "id": "f45238eb-f5c0-4a91-9787-4e69e3766975",
+      "name": "Validate Email Format",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        448,
+        288
+      ],
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1U0gZO1oNbkHsRYW9RO6JJKW0yYtOAUpjHQwym_GtluE",
+          "mode": "list",
+          "cachedResultName": "XORA CRM",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1U0gZO1oNbkHsRYW9RO6JJKW0yYtOAUpjHQwym_GtluE/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1U0gZO1oNbkHsRYW9RO6JJKW0yYtOAUpjHQwym_GtluE/edit#gid=0"
+        },
+        "filtersUI": {
+          "values": [
+            {
+              "lookupColumn": "Business Email Address",
+              "lookupValue": "={{$json[\"Business Email Address\"]}}"
+            }
+          ]
+        },
+        "options": {
+          "dataLocationOnSheet": {
+            "values": {
+              "rangeDefinition": "detectAutomatically"
+            }
+          },
+          "returnFirstMatch": false
+        }
+      },
+      "id": "b2306696-c5d7-4fee-bcfa-28987fe7f4fa",
+      "name": "Check Duplicate in CRM",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        672,
+        192
+      ],
+      "alwaysOutputData": true,
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "YLGcAcTxIoAPsXep",
+          "name": "Google Sheets OAuth2 API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "291a7a7e-8cd0-4d9f-833a-cbbd74dc6f04",
+              "leftValue": "={{ $json.row_number }}",
+              "rightValue": "",
+              "operator": {
+                "type": "number",
+                "operation": "exists",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "f7b7f7d5-2543-4419-bfab-73bef191e296",
+      "name": "Check if Duplicate",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        896,
+        192
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "dup1",
+              "name": "duplicate_status",
+              "value": "Duplicate lead detected",
+              "type": "string"
+            },
+            {
+              "id": "dup2",
+              "name": "email",
+              "value": "={{ $('Google Sheets Trigger').item.json.Email }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "70837164-e300-414a-855f-b14c657c5702",
+      "name": "Handle Duplicate Lead",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1120,
+        96
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "9e57b2df-282f-4c61-b273-ba0b0d8fedba",
+              "name": "Name",
+              "value": "={{ $('Google Sheets Trigger').item.json[\"Full Name\"] }}",
+              "type": "string"
+            },
+            {
+              "id": "27a91f2b-5a4e-4119-9eea-061e10a31aab",
+              "name": "Email",
+              "value": "={{ $('Google Sheets Trigger').item.json[\"Business Email Address\"] }}",
+              "type": "string"
+            },
+            {
+              "id": "2f95b05f-af97-4157-b523-d78d1a639f69",
+              "name": "Company",
+              "value": "={{ $('Google Sheets Trigger').item.json[\"Company Name\"] }}",
+              "type": "string"
+            },
+            {
+              "id": "a1b2c3d4-e5f6-7890-1234-567890abcdef",
+              "name": "Phone",
+              "value": "={{ $('Google Sheets Trigger').item.json[\"Phone Number\"] }}",
+              "type": "string"
+            },
+            {
+              "id": "b2c3d4e5-f6a7-8901-2345-67890abcdef1",
+              "name": "Source",
+              "value": "Google Forms",
+              "type": "string"
+            },
+            {
+              "id": "bf1e88f6-2cf6-40ef-ab61-b0ad208c0609",
+              "name": "Status",
+              "value": "New Lead",
+              "type": "string"
+            },
+            {
+              "id": "c3d4e5f6-a7b8-9012-3456-7890abcdef12",
+              "name": "Created_Date",
+              "value": "={{ $now.toISO() }}",
+              "type": "string"
+            },
+            {
+              "id": "d4e5f6a7-b8c9-0123-4567-890abcdef123",
+              "name": "Last_Updated",
+              "value": "={{ $now.toISO() }}",
+              "type": "string"
+            },
+            {
+              "id": "42b788a3-84a0-489a-bba6-fefa2e7d6926",
+              "name": "Industry",
+              "value": "={{ $('Google Sheets Trigger').item.json[\"Industry\"] }}",
+              "type": "string"
+            },
+            {
+              "id": "9f7d3ec7-f98a-4742-86d5-7b07d69adcca",
+              "name": "Company Size",
+              "value": "={{ $('Google Sheets Trigger').item.json[\"Company Size\"] }}",
+              "type": "string"
+            },
+            {
+              "id": "6efd3200-80cc-46e9-8185-ea480ce50a0f",
+              "name": "Budget Range",
+              "value": "={{ $('Google Sheets Trigger').item.json[\"Budget Range\"] }}",
+              "type": "string"
+            },
+            {
+              "id": "3a713778-4c4b-4aa9-b08a-f0bc8a469786",
+              "name": "Urgency Level",
+              "value": "={{ $('Google Sheets Trigger').item.json[\"Urgency Level\"] }}",
+              "type": "string"
+            },
+            {
+              "id": "99ba7c34-e2bc-4fbf-a21e-340d5e5a57f5",
+              "name": "Expected Results",
+              "value": "={{ \"Pending\" }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "84bc9615-a3c8-4d4a-8e86-77bc2b4ceed8",
+      "name": "Prepare Lead Data",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1120,
+        288
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "fc614d4a-77cc-4ae2-b202-3d857e0ed493",
+              "name": "Lead_Score",
+              "value": "={{\n(\n  $json[\"Company Size\"] == \"Large\" ? 30 :\n  $json[\"Company Size\"] == \"Medium (11-50 Employees)\" ? 20 : 10\n)\n+\n(\n  [\"Technology\", \"Marketing\", \"Finance\"].includes($json[\"Industry\"]) ? 20 : 5\n)\n+\n(\n  $json.Email.match(/@(gmail|yahoo|hotmail|outlook)\\./i) ? 10 : 20\n)\n+\n(\n  $json[\"Budget Range\"] == \"High Budget\" ? 20 :\n  $json[\"Budget Range\"] == \"Medium Budget\" ? 10 : 5\n)\n+\n(\n  $json[\"Urgency Level\"] == \"Immediate Need\" ? 10 :\n  $json[\"Urgency Level\"] == \"Within 1 Month\" ? 8 : 5\n)\n}}",
+              "type": "string"
+            }
+          ]
+        },
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "id": "a817e1d7-939f-4c86-a12c-e59f2a3983e9",
+      "name": "Edit Fields",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1344,
+        288
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "7d090752-92bf-4497-83dd-da8f47117144",
+              "name": "Lead Cateory",
+              "value": "={{\n$json[\"Lead_Score\"] >= 80\n? \"Hot Lead\"\n: $json[\"Lead_Score\"] >= 50\n? \"Warm Lead\"\n: \"Cold Lead\"\n}}",
+              "type": "string"
+            }
+          ]
+        },
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "id": "cbd82989-f174-4027-9555-93b56c3b8ef3",
+      "name": "Edit Fields1",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1568,
+        288
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1U0gZO1oNbkHsRYW9RO6JJKW0yYtOAUpjHQwym_GtluE",
+          "mode": "list",
+          "cachedResultName": "XORA CRM",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1U0gZO1oNbkHsRYW9RO6JJKW0yYtOAUpjHQwym_GtluE/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1U0gZO1oNbkHsRYW9RO6JJKW0yYtOAUpjHQwym_GtluE/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Full Name": "={{$json[\"Name\"]}}",
+            "Phone Number": "={{ $json.Phone }}",
+            "Industry": "={{ $json.Industry }}",
+            "Company Size": "={{$json[\"Company Size\"]}}",
+            "Lead Score": "={{$json[\"Lead_Score\"]}}",
+            "Business Email Address": "={{ $json.Email }}",
+            "Company Name": "={{ $json.Company }}",
+            "Lead Source": "={{ $json.Source }}",
+            "Budget Range": "={{ $json[\"Budget Range\"] }}",
+            "Expected Results": "={{ $json[\"Expected Results\"] }}",
+            "Urgency Level": "={{ $json[\"Urgency Level\"] }}",
+            "Lead Category": "={{ $json[\"Lead Cateory\"] }}",
+            "Lead Status": "={{ $json.Status }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Full Name",
+              "displayName": "Full Name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Business Email Address",
+              "displayName": "Business Email Address",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Phone Number",
+              "displayName": "Phone Number",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Company Name",
+              "displayName": "Company Name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Industry",
+              "displayName": "Industry",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Company Size",
+              "displayName": "Company Size",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Lead Source",
+              "displayName": "Lead Source",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Lead Score",
+              "displayName": "Lead Score",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Budget Range",
+              "displayName": "Budget Range",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Urgency Level",
+              "displayName": "Urgency Level",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Expected Results",
+              "displayName": "Expected Results",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Lead Category",
+              "displayName": "Lead Category",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Lead Status",
+              "displayName": "Lead Status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "id": "16ad04b9-f6f1-47a2-9eb5-814eecc7af42",
+      "name": "Add to CRM",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        1792,
+        288
+      ],
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "YLGcAcTxIoAPsXep",
+          "name": "Google Sheets OAuth2 API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ $json[\"Business Email Address\"] }}",
+        "subject": "={{\"New Lead: \" + $json[\"Full Name\"] + \" from \" + $json[\"Company Name\"]}}",
+        "message": "={{\n\"<h2>New Lead Received</h2>\" +\n\"<p><strong>Name:</strong> \" + $json[\"Full Name\"] + \"</p>\" +\n\"<p><strong>Email:</strong> \" + $json[\"Business Email Address\"] + \"</p>\" +\n\"<p><strong>Company:</strong> \" + $json[\"Company Name\"] + \"</p>\" +\n\"<p><strong>Phone:</strong> \" + $json[\"Phone Number\"] + \"</p>\" +\n\"<p><strong>Lead Score:</strong> \" + $json[\"Lead Score\"] + \"</p>\" +\n\"<p><strong>Lead Status:</strong> \" + $json[\"Lead Status\"] + \"</p>\" +\n\"<p><strong>Received:</strong> \" + $now.toFormat(\"MMMM d, yyyy h:mm a\") + \"</p>\"\n}}",
+        "options": {
+          "bccList": "",
+          "ccList": ""
+        }
+      },
+      "id": "3a50679c-94ed-4931-853d-66ffd824b15e",
+      "name": "Notify New Lead",
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        2016,
+        288
+      ],
+      "webhookId": "159ae943-3378-4f52-bf84-563f71d32c30",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "RXcBjrUFFoTslhko",
+          "name": "Gmail OAuth2 API"
+        }
+      },
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ $('Edit Fields1').item.json.Email }}",
+        "subject": "Thank You for Contacting XORA Automation Agency",
+        "message": "=<div style=\"font-family:Arial,Helvetica,sans-serif;color:#1a1a1a;max-width:600px;margin:0 auto;padding:24px;border:1px solid #eee;border-radius:8px\"><div style=\"text-align:center;margin-bottom:16px\"><span style=\"font-size:20px;font-weight:700;color:#0b5cff\">XORA</span> <span style=\"font-size:13px;color:#888\">Automation Agency</span></div><h2 style=\"color:#0b5cff\">Thank you, {{ $('Edit Fields1').item.json.Name }}!</h2><p>Thank you for reaching out to <strong>XORA Automation Agency</strong>. We are excited to learn more about <strong>{{ $('Edit Fields1').item.json.Company }}</strong> and how intelligent automation can accelerate growth in the {{ $('Edit Fields1').item.json.Industry }} industry.</p><p>Your request has been received and one of our automation specialists is already reviewing your requirements. We will be in touch shortly with tailored recommendations.</p><p>In the meantime, simply reply to this email with any questions &mdash; we would love to hear from you.</p><p style=\"margin-top:24px\">Warm regards,<br/><strong>The XORA Automation Team</strong></p><hr style=\"border:none;border-top:1px solid #eee;margin:20px 0\"/><p style=\"font-size:12px;color:#999\">XORA Automation Agency &bull; Business Process &amp; AI Automation<br/>You are receiving this because you requested a consultation. Reply STOP to opt out.</p></div>",
+        "options": {
+          "appendAttribution": false,
+          "senderName": "XORA Automation Agency"
+        }
+      },
+      "id": "41dfa3df-2731-4c37-8f6c-bc15c4989212",
+      "name": "Follow-Up Email 1 (Thank You)",
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        2240,
+        288
+      ],
+      "webhookId": "a708a678-ac9e-4a1b-b69b-f48cb47477c5",
+      "retryOnFail": true,
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "RXcBjrUFFoTslhko",
+          "name": "Gmail OAuth2 API"
+        }
+      },
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentId": {
+          "__rl": true,
+          "value": "1U0gZO1oNbkHsRYW9RO6JJKW0yYtOAUpjHQwym_GtluE",
+          "mode": "list",
+          "cachedResultName": "XORA CRM",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1U0gZO1oNbkHsRYW9RO6JJKW0yYtOAUpjHQwym_GtluE/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1U0gZO1oNbkHsRYW9RO6JJKW0yYtOAUpjHQwym_GtluE/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Business Email Address": "={{ $('Edit Fields1').item.json.Email }}",
+            "Lead Status": "Follow-up 1 Sent"
+          },
+          "matchingColumns": [
+            "Business Email Address"
+          ],
+          "schema": [
+            {
+              "id": "Business Email Address",
+              "displayName": "Business Email Address",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Lead Status",
+              "displayName": "Lead Status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ]
+        },
+        "options": {
+          "cellFormat": "USER_ENTERED"
+        }
+      },
+      "id": "1923006d-d24c-4894-b01d-8a64defbc0d6",
+      "name": "Update CRM (Follow-up 1 Sent)",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        2464,
+        288
+      ],
+      "retryOnFail": true,
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "YLGcAcTxIoAPsXep",
+          "name": "Google Sheets OAuth2 API"
+        }
+      },
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "hot1",
+              "leftValue": "={{ $('Edit Fields1').item.json.Lead_Score }}",
+              "rightValue": 80,
+              "operator": {
+                "type": "number",
+                "operation": "gte"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "looseTypeValidation": true,
+        "options": {}
+      },
+      "id": "d74f89e3-1ebb-4da6-83b9-cf7f8390d1a0",
+      "name": "Is Hot Lead (Score >= 80)?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        2688,
+        192
+      ]
+    },
+    {
+      "parameters": {
+        "sendTo": "teamxora2@gmail.com",
+        "subject": "=🔥 HOT LEAD STILL ACTIVE — {{ $('Edit Fields1').item.json.Name }} ({{ $('Edit Fields1').item.json.Company }})",
+        "message": "=<div style=\"font-family:Arial,Helvetica,sans-serif;color:#1a1a1a;max-width:600px;margin:0 auto;padding:24px;border:1px solid #eee;border-radius:8px\"><div style=\"text-align:center;margin-bottom:16px\"><span style=\"font-size:20px;font-weight:700;color:#0b5cff\">XORA</span> <span style=\"font-size:13px;color:#888\">Automation Agency</span></div><h2 style=\"color:#d93025\">🔥 HOT LEAD STILL ACTIVE</h2><p>A high-value lead (score &ge; 80) is still active in the follow-up sequence. Prioritise outreach:</p><table style=\"border-collapse:collapse;width:100%;margin:12px 0\"><tr><td style=\"padding:6px 10px;border:1px solid #eee;font-weight:600;width:140px\">Name</td><td style=\"padding:6px 10px;border:1px solid #eee\">{{ $('Edit Fields1').item.json.Name }}</td></tr><tr><td style=\"padding:6px 10px;border:1px solid #eee;font-weight:600\">Company</td><td style=\"padding:6px 10px;border:1px solid #eee\">{{ $('Edit Fields1').item.json.Company }}</td></tr><tr><td style=\"padding:6px 10px;border:1px solid #eee;font-weight:600\">Industry</td><td style=\"padding:6px 10px;border:1px solid #eee\">{{ $('Edit Fields1').item.json.Industry }}</td></tr><tr><td style=\"padding:6px 10px;border:1px solid #eee;font-weight:600\">Email</td><td style=\"padding:6px 10px;border:1px solid #eee\">{{ $('Edit Fields1').item.json.Email }}</td></tr><tr><td style=\"padding:6px 10px;border:1px solid #eee;font-weight:600\">Lead Score</td><td style=\"padding:6px 10px;border:1px solid #eee\"><strong>{{ $('Edit Fields1').item.json.Lead_Score }}</strong></td></tr></table><p>Reach out promptly while interest is high.</p><hr style=\"border:none;border-top:1px solid #eee;margin:20px 0\"/><p style=\"font-size:12px;color:#999\">XORA Automation Agency &bull; Business Process &amp; AI Automation<br/>You are receiving this because you requested a consultation. Reply STOP to opt out.</p></div>",
+        "options": {
+          "appendAttribution": false,
+          "senderName": "XORA Automation Agency"
+        }
+      },
+      "id": "9ed17f98-0859-489a-813e-dcfcf4014173",
+      "name": "Email Sales Team (Hot Lead)",
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        2912,
+        192
+      ],
+      "webhookId": "45d441a0-0877-4369-8284-51fc83e2a0a0",
+      "retryOnFail": true,
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "RXcBjrUFFoTslhko",
+          "name": "Gmail OAuth2 API"
+        }
+      },
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "amount": 1,
+        "unit": "days"
+      },
+      "id": "d422ea64-1186-4ea0-acfe-837ee6b58e5b",
+      "name": "Wait 1 Day",
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        2688,
+        384
+      ],
+      "webhookId": "52443c74-dddb-4ca7-8109-d83a73bf73b1"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1U0gZO1oNbkHsRYW9RO6JJKW0yYtOAUpjHQwym_GtluE",
+          "mode": "list",
+          "cachedResultName": "XORA CRM",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1U0gZO1oNbkHsRYW9RO6JJKW0yYtOAUpjHQwym_GtluE/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1U0gZO1oNbkHsRYW9RO6JJKW0yYtOAUpjHQwym_GtluE/edit#gid=0"
+        },
+        "filtersUI": {
+          "values": [
+            {
+              "lookupColumn": "Business Email Address",
+              "lookupValue": "={{ $('Edit Fields1').item.json.Email }}"
+            }
+          ]
+        },
+        "options": {
+          "returnFirstMatch": true
+        }
+      },
+      "id": "7e680eb6-b985-4617-8d7c-c5c8f435b974",
+      "name": "Sync CRM State (FU2)",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        2912,
+        384
+      ],
+      "retryOnFail": true,
+      "alwaysOutputData": true,
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "YLGcAcTxIoAPsXep",
+          "name": "Google Sheets OAuth2 API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "getAll",
+        "limit": 5,
+        "filters": {
+          "q": "=from:{{ $('Edit Fields1').item.json.Email }}",
+          "readStatus": "both",
+          "receivedAfter": "={{ $('Edit Fields1').item.json.Created_Date }}"
+        }
+      },
+      "id": "28ede156-15b4-44f4-a346-fff6728d3103",
+      "name": "Check Reply (FU2)",
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        3136,
+        384
+      ],
+      "webhookId": "592aa49c-8f79-4d92-bfd7-aaaf63cd8279",
+      "retryOnFail": true,
+      "alwaysOutputData": true,
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "RXcBjrUFFoTslhko",
+          "name": "Gmail OAuth2 API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": false,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "g1",
+              "leftValue": "={{ $('Sync CRM State (FU2)').item.json[\"Lead Status\"] }}",
+              "rightValue": "Closed",
+              "operator": {
+                "type": "string",
+                "operation": "notEquals"
+              }
+            },
+            {
+              "id": "g2",
+              "leftValue": "={{ $('Sync CRM State (FU2)').item.json[\"Lead Status\"] }}",
+              "rightValue": "Lost",
+              "operator": {
+                "type": "string",
+                "operation": "notEquals"
+              }
+            },
+            {
+              "id": "g3",
+              "leftValue": "={{ $json.id }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "empty",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "looseTypeValidation": true,
+        "options": {}
+      },
+      "id": "0a1c10fb-5043-4e74-8dd1-8d300b692c8f",
+      "name": "Continue Sequence? (FU2)",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        3360,
+        384
+      ]
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ $('Edit Fields1').item.json.Email }}",
+        "subject": "Learn More About Our Services",
+        "message": "=<div style=\"font-family:Arial,Helvetica,sans-serif;color:#1a1a1a;max-width:600px;margin:0 auto;padding:24px;border:1px solid #eee;border-radius:8px\"><div style=\"text-align:center;margin-bottom:16px\"><span style=\"font-size:20px;font-weight:700;color:#0b5cff\">XORA</span> <span style=\"font-size:13px;color:#888\">Automation Agency</span></div><h2 style=\"color:#0b5cff\">How XORA can help {{ $('Edit Fields1').item.json.Company }}</h2><p>Hi {{ $('Edit Fields1').item.json.Name }},</p><p>We help {{ $('Edit Fields1').item.json.Industry }} businesses save time and scale faster with automation. Here is a snapshot of what we deliver:</p><ul><li><strong>Lead Generation &amp; CRM Automation</strong> &mdash; capture, score, and route leads automatically.</li><li><strong>AI-Powered Workflows</strong> &mdash; document processing, chatbots, and smart triage.</li><li><strong>Systems Integration</strong> &mdash; connect the tools you already use.</li></ul><p>Would a quick 15-minute call make sense? Just reply and we will find a time.</p><p style=\"margin-top:24px\">Best regards,<br/><strong>The XORA Automation Team</strong></p><hr style=\"border:none;border-top:1px solid #eee;margin:20px 0\"/><p style=\"font-size:12px;color:#999\">XORA Automation Agency &bull; Business Process &amp; AI Automation<br/>You are receiving this because you requested a consultation. Reply STOP to opt out.</p></div>",
+        "options": {
+          "appendAttribution": false,
+          "senderName": "XORA Automation Agency"
+        }
+      },
+      "id": "4e751f68-a8ab-4c95-aa17-bfffb3e9de22",
+      "name": "Follow-Up Email 2 (Our Services)",
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        3584,
+        288
+      ],
+      "webhookId": "be57187c-c9d0-4363-a257-f5bc7092f524",
+      "retryOnFail": true,
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "RXcBjrUFFoTslhko",
+          "name": "Gmail OAuth2 API"
+        }
+      },
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentId": {
+          "__rl": true,
+          "value": "1U0gZO1oNbkHsRYW9RO6JJKW0yYtOAUpjHQwym_GtluE",
+          "mode": "list",
+          "cachedResultName": "XORA CRM",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1U0gZO1oNbkHsRYW9RO6JJKW0yYtOAUpjHQwym_GtluE/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1U0gZO1oNbkHsRYW9RO6JJKW0yYtOAUpjHQwym_GtluE/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Business Email Address": "={{ $('Edit Fields1').item.json.Email }}",
+            "Lead Status": "Follow-up 2 Sent"
+          },
+          "matchingColumns": [
+            "Business Email Address"
+          ],
+          "schema": [
+            {
+              "id": "Business Email Address",
+              "displayName": "Business Email Address",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Lead Status",
+              "displayName": "Lead Status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ]
+        },
+        "options": {
+          "cellFormat": "USER_ENTERED"
+        }
+      },
+      "id": "84e5ccc1-0b4c-4f1c-bfa5-ee6674bbc2e2",
+      "name": "Update CRM (Follow-up 2 Sent)",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        3808,
+        288
+      ],
+      "retryOnFail": true,
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "YLGcAcTxIoAPsXep",
+          "name": "Google Sheets OAuth2 API"
+        }
+      },
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "amount": 2,
+        "unit": "days"
+      },
+      "id": "6912a0c7-cdfe-4709-8344-1dfa22c10e91",
+      "name": "Wait 2 Days",
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        4032,
+        288
+      ],
+      "webhookId": "1880a1d7-59bb-4869-a36c-e2c6ad1804a0"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1U0gZO1oNbkHsRYW9RO6JJKW0yYtOAUpjHQwym_GtluE",
+          "mode": "list",
+          "cachedResultName": "XORA CRM",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1U0gZO1oNbkHsRYW9RO6JJKW0yYtOAUpjHQwym_GtluE/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1U0gZO1oNbkHsRYW9RO6JJKW0yYtOAUpjHQwym_GtluE/edit#gid=0"
+        },
+        "filtersUI": {
+          "values": [
+            {
+              "lookupColumn": "Business Email Address",
+              "lookupValue": "={{ $('Edit Fields1').item.json.Email }}"
+            }
+          ]
+        },
+        "options": {
+          "returnFirstMatch": true
+        }
+      },
+      "id": "5a61b8cc-8e32-492a-8ca6-c3a2de5b5aeb",
+      "name": "Sync CRM State (FU3)",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        4256,
+        288
+      ],
+      "retryOnFail": true,
+      "alwaysOutputData": true,
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "YLGcAcTxIoAPsXep",
+          "name": "Google Sheets OAuth2 API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "getAll",
+        "limit": 5,
+        "filters": {
+          "q": "=from:{{ $('Edit Fields1').item.json.Email }}",
+          "readStatus": "both",
+          "receivedAfter": "={{ $('Edit Fields1').item.json.Created_Date }}"
+        }
+      },
+      "id": "059c158b-1a72-4589-8ff7-a455782e0828",
+      "name": "Check Reply (FU3)",
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        4480,
+        288
+      ],
+      "webhookId": "9454e4e2-890c-44a9-8ac7-6c42fbeeee04",
+      "retryOnFail": true,
+      "alwaysOutputData": true,
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "RXcBjrUFFoTslhko",
+          "name": "Gmail OAuth2 API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": false,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "g1",
+              "leftValue": "={{ $('Sync CRM State (FU3)').item.json[\"Lead Status\"] }}",
+              "rightValue": "Closed",
+              "operator": {
+                "type": "string",
+                "operation": "notEquals"
+              }
+            },
+            {
+              "id": "g2",
+              "leftValue": "={{ $('Sync CRM State (FU3)').item.json[\"Lead Status\"] }}",
+              "rightValue": "Lost",
+              "operator": {
+                "type": "string",
+                "operation": "notEquals"
+              }
+            },
+            {
+              "id": "g3",
+              "leftValue": "={{ $json.id }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "empty",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "looseTypeValidation": true,
+        "options": {}
+      },
+      "id": "f8c57cd1-27a7-4e38-99cf-85dfa1170b86",
+      "name": "Continue Sequence? (FU3)",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        4704,
+        288
+      ]
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ $('Edit Fields1').item.json.Email }}",
+        "subject": "Success Story / Case Study",
+        "message": "=<div style=\"font-family:Arial,Helvetica,sans-serif;color:#1a1a1a;max-width:600px;margin:0 auto;padding:24px;border:1px solid #eee;border-radius:8px\"><div style=\"text-align:center;margin-bottom:16px\"><span style=\"font-size:20px;font-weight:700;color:#0b5cff\">XORA</span> <span style=\"font-size:13px;color:#888\">Automation Agency</span></div><h2 style=\"color:#0b5cff\">Real results from businesses like yours</h2><p>Hi {{ $('Edit Fields1').item.json.Name }},</p><p>We recently partnered with a {{ $('Edit Fields1').item.json.Industry }} company facing the same challenges many growing teams do &mdash; manual data entry, slow lead response, and disconnected tools.</p><blockquote style=\"border-left:4px solid #0b5cff;margin:16px 0;padding:8px 16px;background:#f5f8ff\"><p style=\"margin:0\"><strong>+312% faster lead response</strong>, <strong>18 hours/week saved</strong>, and a <strong>27% increase in qualified opportunities</strong> within the first 90 days.</p></blockquote><p>We would love to map out a similar automation blueprint for {{ $('Edit Fields1').item.json.Company }}. Reply and we will send a free custom plan.</p><p style=\"margin-top:24px\">Best regards,<br/><strong>The XORA Automation Team</strong></p><hr style=\"border:none;border-top:1px solid #eee;margin:20px 0\"/><p style=\"font-size:12px;color:#999\">XORA Automation Agency &bull; Business Process &amp; AI Automation<br/>You are receiving this because you requested a consultation. Reply STOP to opt out.</p></div>",
+        "options": {
+          "appendAttribution": false,
+          "senderName": "XORA Automation Agency"
+        }
+      },
+      "id": "6440f47a-bd7a-4fbf-808c-b282d39b6d02",
+      "name": "Follow-Up Email 3 (Case Study)",
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        4928,
+        192
+      ],
+      "webhookId": "029fec76-4d88-49e9-a5b1-9a973a4046c7",
+      "retryOnFail": true,
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "RXcBjrUFFoTslhko",
+          "name": "Gmail OAuth2 API"
+        }
+      },
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentId": {
+          "__rl": true,
+          "value": "1U0gZO1oNbkHsRYW9RO6JJKW0yYtOAUpjHQwym_GtluE",
+          "mode": "list",
+          "cachedResultName": "XORA CRM",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1U0gZO1oNbkHsRYW9RO6JJKW0yYtOAUpjHQwym_GtluE/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1U0gZO1oNbkHsRYW9RO6JJKW0yYtOAUpjHQwym_GtluE/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Business Email Address": "={{ $('Edit Fields1').item.json.Email }}",
+            "Lead Status": "Follow-up 3 Sent"
+          },
+          "matchingColumns": [
+            "Business Email Address"
+          ],
+          "schema": [
+            {
+              "id": "Business Email Address",
+              "displayName": "Business Email Address",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Lead Status",
+              "displayName": "Lead Status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ]
+        },
+        "options": {
+          "cellFormat": "USER_ENTERED"
+        }
+      },
+      "id": "56978ecb-8a4a-47a9-b546-72f10f56c3ae",
+      "name": "Update CRM (Follow-up 3 Sent)",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        5152,
+        192
+      ],
+      "retryOnFail": true,
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "YLGcAcTxIoAPsXep",
+          "name": "Google Sheets OAuth2 API"
+        }
+      },
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "amount": 4,
+        "unit": "days"
+      },
+      "id": "5d503d96-eaf4-4722-9cb9-6aabd20882fe",
+      "name": "Wait 4 Days",
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        5376,
+        192
+      ],
+      "webhookId": "5371e2c9-2c7f-4d7c-ae2c-44372b292b8c"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1U0gZO1oNbkHsRYW9RO6JJKW0yYtOAUpjHQwym_GtluE",
+          "mode": "list",
+          "cachedResultName": "XORA CRM",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1U0gZO1oNbkHsRYW9RO6JJKW0yYtOAUpjHQwym_GtluE/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1U0gZO1oNbkHsRYW9RO6JJKW0yYtOAUpjHQwym_GtluE/edit#gid=0"
+        },
+        "filtersUI": {
+          "values": [
+            {
+              "lookupColumn": "Business Email Address",
+              "lookupValue": "={{ $('Edit Fields1').item.json.Email }}"
+            }
+          ]
+        },
+        "options": {
+          "returnFirstMatch": true
+        }
+      },
+      "id": "535381c9-88af-4d0a-9749-189242a19a41",
+      "name": "Sync CRM State (FU4)",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        5600,
+        192
+      ],
+      "retryOnFail": true,
+      "alwaysOutputData": true,
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "YLGcAcTxIoAPsXep",
+          "name": "Google Sheets OAuth2 API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "getAll",
+        "limit": 5,
+        "filters": {
+          "q": "=from:{{ $('Edit Fields1').item.json.Email }}",
+          "readStatus": "both",
+          "receivedAfter": "={{ $('Edit Fields1').item.json.Created_Date }}"
+        }
+      },
+      "id": "fab5ce81-14c7-4fed-988e-ab0404560675",
+      "name": "Check Reply (FU4)",
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        5824,
+        192
+      ],
+      "webhookId": "a86f36e0-45f2-4cbd-849a-398a50702d25",
+      "retryOnFail": true,
+      "alwaysOutputData": true,
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "RXcBjrUFFoTslhko",
+          "name": "Gmail OAuth2 API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": false,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "g1",
+              "leftValue": "={{ $('Sync CRM State (FU4)').item.json[\"Lead Status\"] }}",
+              "rightValue": "Closed",
+              "operator": {
+                "type": "string",
+                "operation": "notEquals"
+              }
+            },
+            {
+              "id": "g2",
+              "leftValue": "={{ $('Sync CRM State (FU4)').item.json[\"Lead Status\"] }}",
+              "rightValue": "Lost",
+              "operator": {
+                "type": "string",
+                "operation": "notEquals"
+              }
+            },
+            {
+              "id": "g3",
+              "leftValue": "={{ $json.id }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "empty",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "looseTypeValidation": true,
+        "options": {}
+      },
+      "id": "1923188e-c570-48bb-af65-6372f52d35dd",
+      "name": "Continue Sequence? (FU4)",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        6048,
+        192
+      ]
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ $('Edit Fields1').item.json.Email }}",
+        "subject": "Exclusive Offer for Your Business",
+        "message": "=<div style=\"font-family:Arial,Helvetica,sans-serif;color:#1a1a1a;max-width:600px;margin:0 auto;padding:24px;border:1px solid #eee;border-radius:8px\"><div style=\"text-align:center;margin-bottom:16px\"><span style=\"font-size:20px;font-weight:700;color:#0b5cff\">XORA</span> <span style=\"font-size:13px;color:#888\">Automation Agency</span></div><h2 style=\"color:#0b5cff\">An exclusive offer for {{ $('Edit Fields1').item.json.Company }}</h2><p>Hi {{ $('Edit Fields1').item.json.Name }},</p><p>As a thank you for your interest, we would like to offer you a <strong>complimentary automation audit</strong> (normally $500) plus <strong>15% off</strong> your first project when you start this month.</p><p>This is a limited-time offer reserved for a small number of new {{ $('Edit Fields1').item.json.Industry }} clients, so we wanted to make sure you did not miss it.</p><p style=\"text-align:center;margin:24px 0\"><a href=\"#\" style=\"background:#0b5cff;color:#fff;padding:12px 24px;border-radius:6px;text-decoration:none;font-weight:600\">Claim Your Offer</a></p><p>Simply reply to this email and we will get you set up.</p><p style=\"margin-top:24px\">Best regards,<br/><strong>The XORA Automation Team</strong></p><hr style=\"border:none;border-top:1px solid #eee;margin:20px 0\"/><p style=\"font-size:12px;color:#999\">XORA Automation Agency &bull; Business Process &amp; AI Automation<br/>You are receiving this because you requested a consultation. Reply STOP to opt out.</p></div>",
+        "options": {
+          "appendAttribution": false,
+          "senderName": "XORA Automation Agency"
+        }
+      },
+      "id": "187dbfc5-c88e-4325-9cb3-9e575aeaf660",
+      "name": "Follow-Up Email 4 (Exclusive Offer)",
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        6272,
+        96
+      ],
+      "webhookId": "a6c547bd-9d43-4d0a-9838-8ff981b31fbb",
+      "retryOnFail": true,
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "RXcBjrUFFoTslhko",
+          "name": "Gmail OAuth2 API"
+        }
+      },
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentId": {
+          "__rl": true,
+          "value": "1U0gZO1oNbkHsRYW9RO6JJKW0yYtOAUpjHQwym_GtluE",
+          "mode": "list",
+          "cachedResultName": "XORA CRM",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1U0gZO1oNbkHsRYW9RO6JJKW0yYtOAUpjHQwym_GtluE/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1U0gZO1oNbkHsRYW9RO6JJKW0yYtOAUpjHQwym_GtluE/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Business Email Address": "={{ $('Edit Fields1').item.json.Email }}",
+            "Lead Status": "Follow-up 4 Sent"
+          },
+          "matchingColumns": [
+            "Business Email Address"
+          ],
+          "schema": [
+            {
+              "id": "Business Email Address",
+              "displayName": "Business Email Address",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Lead Status",
+              "displayName": "Lead Status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ]
+        },
+        "options": {
+          "cellFormat": "USER_ENTERED"
+        }
+      },
+      "id": "6ba42bcf-92e3-49fa-a2f5-6a62abc00339",
+      "name": "Update CRM (Follow-up 4 Sent)",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        6496,
+        96
+      ],
+      "retryOnFail": true,
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "YLGcAcTxIoAPsXep",
+          "name": "Google Sheets OAuth2 API"
+        }
+      },
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "amount": 7,
+        "unit": "days"
+      },
+      "id": "e99ad86c-a9a6-447c-8a3f-6b1f5400b461",
+      "name": "Wait 7 Days",
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        6720,
+        96
+      ],
+      "webhookId": "9dfd03fa-1404-4a0b-b6e6-003ebb37be3f"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1U0gZO1oNbkHsRYW9RO6JJKW0yYtOAUpjHQwym_GtluE",
+          "mode": "list",
+          "cachedResultName": "XORA CRM",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1U0gZO1oNbkHsRYW9RO6JJKW0yYtOAUpjHQwym_GtluE/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1U0gZO1oNbkHsRYW9RO6JJKW0yYtOAUpjHQwym_GtluE/edit#gid=0"
+        },
+        "filtersUI": {
+          "values": [
+            {
+              "lookupColumn": "Business Email Address",
+              "lookupValue": "={{ $('Edit Fields1').item.json.Email }}"
+            }
+          ]
+        },
+        "options": {
+          "returnFirstMatch": true
+        }
+      },
+      "id": "f0be8cac-665d-4160-b240-b4c8864638c1",
+      "name": "Sync CRM State (FU5)",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        6944,
+        96
+      ],
+      "retryOnFail": true,
+      "alwaysOutputData": true,
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "YLGcAcTxIoAPsXep",
+          "name": "Google Sheets OAuth2 API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "getAll",
+        "limit": 5,
+        "filters": {
+          "q": "=from:{{ $('Edit Fields1').item.json.Email }}",
+          "readStatus": "both",
+          "receivedAfter": "={{ $('Edit Fields1').item.json.Created_Date }}"
+        }
+      },
+      "id": "d85145d2-ffe9-4414-bb0d-f8bf26ad2edc",
+      "name": "Check Reply (FU5)",
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        7168,
+        96
+      ],
+      "webhookId": "10fc5a7c-a321-47b9-8f8f-0f2a614e94d5",
+      "retryOnFail": true,
+      "alwaysOutputData": true,
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "RXcBjrUFFoTslhko",
+          "name": "Gmail OAuth2 API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": false,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "g1",
+              "leftValue": "={{ $('Sync CRM State (FU5)').item.json[\"Lead Status\"] }}",
+              "rightValue": "Closed",
+              "operator": {
+                "type": "string",
+                "operation": "notEquals"
+              }
+            },
+            {
+              "id": "g2",
+              "leftValue": "={{ $('Sync CRM State (FU5)').item.json[\"Lead Status\"] }}",
+              "rightValue": "Lost",
+              "operator": {
+                "type": "string",
+                "operation": "notEquals"
+              }
+            },
+            {
+              "id": "g3",
+              "leftValue": "={{ $json.id }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "empty",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "looseTypeValidation": true,
+        "options": {}
+      },
+      "id": "63fc21f3-850c-4ccc-b2d2-4802c88ee7b3",
+      "name": "Continue Sequence? (FU5)",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        7392,
+        96
+      ]
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ $('Edit Fields1').item.json.Email }}",
+        "subject": "Final Follow-Up",
+        "message": "=<div style=\"font-family:Arial,Helvetica,sans-serif;color:#1a1a1a;max-width:600px;margin:0 auto;padding:24px;border:1px solid #eee;border-radius:8px\"><div style=\"text-align:center;margin-bottom:16px\"><span style=\"font-size:20px;font-weight:700;color:#0b5cff\">XORA</span> <span style=\"font-size:13px;color:#888\">Automation Agency</span></div><h2 style=\"color:#0b5cff\">One last note, {{ $('Edit Fields1').item.json.Name }}</h2><p>We have reached out a few times because we genuinely believe automation could make a real difference for {{ $('Edit Fields1').item.json.Company }}.</p><p>We do not want to crowd your inbox, so this will be our final follow-up for now. If the timing is not right, no problem at all &mdash; the door stays open.</p><p>Whenever you are ready to explore what is possible, just reply to this email and we will pick up right where we left off.</p><p style=\"margin-top:24px\">Wishing you continued success,<br/><strong>The XORA Automation Team</strong></p><hr style=\"border:none;border-top:1px solid #eee;margin:20px 0\"/><p style=\"font-size:12px;color:#999\">XORA Automation Agency &bull; Business Process &amp; AI Automation<br/>You are receiving this because you requested a consultation. Reply STOP to opt out.</p></div>",
+        "options": {
+          "appendAttribution": false,
+          "senderName": "XORA Automation Agency"
+        }
+      },
+      "id": "1e83ff03-f5c5-4821-b14f-afc0aadd9a8b",
+      "name": "Follow-Up Email 5 (Final Follow-Up)",
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        7616,
+        0
+      ],
+      "webhookId": "aa38d111-db32-480a-814a-cb7cd876999c",
+      "retryOnFail": true,
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "RXcBjrUFFoTslhko",
+          "name": "Gmail OAuth2 API"
+        }
+      },
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentId": {
+          "__rl": true,
+          "value": "1U0gZO1oNbkHsRYW9RO6JJKW0yYtOAUpjHQwym_GtluE",
+          "mode": "list",
+          "cachedResultName": "XORA CRM",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1U0gZO1oNbkHsRYW9RO6JJKW0yYtOAUpjHQwym_GtluE/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1U0gZO1oNbkHsRYW9RO6JJKW0yYtOAUpjHQwym_GtluE/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Business Email Address": "={{ $('Edit Fields1').item.json.Email }}",
+            "Lead Status": "Completed"
+          },
+          "matchingColumns": [
+            "Business Email Address"
+          ],
+          "schema": [
+            {
+              "id": "Business Email Address",
+              "displayName": "Business Email Address",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Lead Status",
+              "displayName": "Lead Status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ]
+        },
+        "options": {
+          "cellFormat": "USER_ENTERED"
+        }
+      },
+      "id": "3a2a33c2-eebd-4e7f-9129-df31d5128cca",
+      "name": "Update CRM (Completed)",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        7840,
+        0
+      ],
+      "retryOnFail": true,
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "YLGcAcTxIoAPsXep",
+          "name": "Google Sheets OAuth2 API"
+        }
+      },
+      "onError": "continueRegularOutput"
+    },
+    {
+      "parameters": {},
+      "id": "efdda599-c856-414d-aceb-e12390ffa53a",
+      "name": "Sequence Stopped (FU5)",
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        7616,
+        192
+      ]
+    },
+    {
+      "parameters": {},
+      "id": "537e784d-b184-406e-b3e2-fb0ec8ae8993",
+      "name": "Sequence Stopped (FU4)",
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        6272,
+        288
+      ]
+    },
+    {
+      "parameters": {},
+      "id": "d583bc40-1220-4915-8485-87a7fc6ca51f",
+      "name": "Sequence Stopped (FU3)",
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        4928,
+        384
+      ]
+    },
+    {
+      "parameters": {},
+      "id": "d3e043c3-69a9-4163-8889-e27228080902",
+      "name": "Sequence Stopped (FU2)",
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        3584,
+        480
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "inv1",
+              "name": "validation_error",
+              "value": "Invalid email format",
+              "type": "string"
+            },
+            {
+              "id": "inv2",
+              "name": "email",
+              "value": "={{ $('Google Sheets Trigger').item.json.Email }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "3e9f5430-8d5b-4d5d-8501-55a0368cae7d",
+      "name": "Handle Invalid Email",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        672,
+        384
+      ]
+    },
+    {
+      "parameters": {
+        "mode": "raw",
+        "options": {}
+      },
+      "id": "faa84f2d-ae31-45a3-b135-d7c53768fa0e",
+      "name": "Handle Missing Fields",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        448,
+        480
+      ]
+    },
+    {
+      "parameters": {
+        "content": "## Production-Ready Lead Generation Workflow\n\n**Flow:**\n1. Google Forms → Google Sheets (Form Responses)\n2. Trigger on new row\n3. Validate required fields (Name, Email)\n4. Validate email format (regex)\n5. Check for duplicates in CRM\n6. Prepare lead data with scoring\n7. Send notification email\n8. Add to CRM sheet\n\n**Error Handling:**\n- Missing fields → Log error\n- Invalid email → Log error\n- Duplicate → Skip with log\n- Notification failure → Continue (continueOnFail)\n\n**Dynamic Data:**\n- All form fields mapped dynamically\n- Lead scoring based on data completeness\n- Timestamps auto-generated\n- Source tracking enabled",
+        "height": 712,
+        "width": 512,
+        "color": 4
+      },
+      "id": "b5725a71-d5e8-4364-bda2-99846686385e",
+      "name": "Architecture Guide",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -2128,
+        112
+      ]
+    },
+    {
+      "parameters": {
+        "content": "## Setup Instructions\n\n**Google Form Fields (Required):**\n- Name (Short answer)\n- Email (Short answer)\n- Phone (Short answer, optional)\n- Company (Short answer, optional)\n\n**CRM Sheet Columns:**\n- Name\n- Email\n- Phone\n- Company\n- Source\n- Lead_Score\n- Status\n- Created_Date\n- Last_Updated\n\n**Credentials Needed:**\n1. Google Sheets Trigger OAuth2\n2. Google Sheets OAuth2 (CRM access)\n3. Gmail OAuth2 (notifications)\n\n**Configuration:**\n- Replace all placeholder() values\n- Set correct Sheet IDs\n- Configure notification email\n- Test with sample data",
+        "height": 856,
+        "width": 460,
+        "color": 5
+      },
+      "id": "737d8ea8-c050-4bfe-b846-33e49b8d8cca",
+      "name": "Setup Instructions",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -1552,
+        848
+      ]
+    },
+    {
+      "parameters": {
+        "content": "## Data Flow & Validation\n\n**Validation Stages:**\n1. Required Fields Check\n   - Name must not be empty\n   - Email must not be empty\n\n2. Email Format Validation\n   - Regex pattern check\n   - Must contain @ and domain\n\n3. Duplicate Detection\n   - Search CRM by email\n   - Skip if exists\n\n**Lead Scoring Logic:**\n- Base score: 50\n- +25 if Company provided\n- Future: Add more criteria\n\n**Status Values:**\n- New (initial)\n- Contacted\n- Qualified\n- Converted\n- Lost",
+        "height": 712,
+        "width": 532,
+        "color": 3
+      },
+      "id": "5e075b66-5688-4b0d-aa4b-96132d92b2a9",
+      "name": "Data Flow",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -1536,
+        112
+      ]
+    },
+    {
+      "parameters": {
+        "content": "## Production Checklist\n\n✓ Remove all hardcoded values\n✓ Use dynamic expressions\n✓ Add error handling (continueOnFail)\n✓ Validate all inputs\n✓ Check for duplicates\n✓ Use proper credentials\n✓ Add timestamps\n✓ Implement lead scoring\n✓ Send notifications\n✓ Log errors\n\n**Test Cases:**\n1. Valid lead → Should add to CRM\n2. Missing name → Should reject\n3. Missing email → Should reject\n4. Invalid email → Should reject\n5. Duplicate email → Should skip\n6. Partial data → Should add with lower score\n\n**Monitoring:**\n- Check execution logs daily\n- Monitor error rates\n- Review duplicate detections\n- Validate CRM data quality",
+        "height": 712,
+        "width": 550,
+        "color": 6
+      },
+      "id": "c1790457-329b-49da-9a8b-d9636cba9d51",
+      "name": "Production Checklist",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -928,
+        112
+      ]
+    },
+    {
+      "parameters": {
+        "content": "## Week 4 — Follow-Up Automation System\n\n**Sequence (from Notify New Lead):**\nEmail #1 (immediate) → Update CRM → Hot-Lead check\n→ Wait 1d → gate → Email #2 → Update CRM\n→ Wait 2d → gate → Email #3 → Update CRM\n→ Wait 4d → gate → Email #4 → Update CRM\n→ Wait 7d → gate → Email #5 → Update CRM (Completed)\n\n**Gate (before emails 2-5):** re-reads current CRM row +\nsearches Gmail for a reply. Continues only if\nLead Status ≠ Closed/Lost AND no reply received.\n\n**Hot Lead:** Lead Score ≥ 80 → Gmail alert to Sales Team.\n\n**CRM stage values:** Follow-up 1..4 Sent, Completed.\n\n**Reliability:** every external node uses retryOnFail\n(3 tries, 5s backoff); emails/updates continue on error.\n\n**Dynamic values:** Name, Company, Industry, Lead Score pulled\nfrom Edit Fields1 via $('Edit Fields1').item.json.",
+        "height": 732,
+        "width": 460,
+        "color": 7
+      },
+      "id": "8531fa44-0850-4bf2-a500-949a270e72b9",
+      "name": "Week 4 — Follow-Up System",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -2096,
+        864
+      ]
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Google Sheets Trigger": {
+      "main": [
+        [
+          {
+            "node": "Validate Required Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Validate Required Fields": {
+      "main": [
+        [
+          {
+            "node": "Validate Email Format",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Handle Missing Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Validate Email Format": {
+      "main": [
+        [
+          {
+            "node": "Check Duplicate in CRM",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Handle Invalid Email",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check Duplicate in CRM": {
+      "main": [
+        [
+          {
+            "node": "Check if Duplicate",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check if Duplicate": {
+      "main": [
+        [
+          {
+            "node": "Handle Duplicate Lead",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Prepare Lead Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Prepare Lead Data": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields1": {
+      "main": [
+        [
+          {
+            "node": "Add to CRM",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Add to CRM": {
+      "main": [
+        [
+          {
+            "node": "Notify New Lead",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Notify New Lead": {
+      "main": [
+        [
+          {
+            "node": "Follow-Up Email 1 (Thank You)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Follow-Up Email 1 (Thank You)": {
+      "main": [
+        [
+          {
+            "node": "Update CRM (Follow-up 1 Sent)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update CRM (Follow-up 1 Sent)": {
+      "main": [
+        [
+          {
+            "node": "Is Hot Lead (Score >= 80)?",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Wait 1 Day",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Is Hot Lead (Score >= 80)?": {
+      "main": [
+        [
+          {
+            "node": "Email Sales Team (Hot Lead)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait 1 Day": {
+      "main": [
+        [
+          {
+            "node": "Sync CRM State (FU2)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Sync CRM State (FU2)": {
+      "main": [
+        [
+          {
+            "node": "Check Reply (FU2)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check Reply (FU2)": {
+      "main": [
+        [
+          {
+            "node": "Continue Sequence? (FU2)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Continue Sequence? (FU2)": {
+      "main": [
+        [
+          {
+            "node": "Follow-Up Email 2 (Our Services)",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Sequence Stopped (FU2)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Follow-Up Email 2 (Our Services)": {
+      "main": [
+        [
+          {
+            "node": "Update CRM (Follow-up 2 Sent)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update CRM (Follow-up 2 Sent)": {
+      "main": [
+        [
+          {
+            "node": "Wait 2 Days",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait 2 Days": {
+      "main": [
+        [
+          {
+            "node": "Sync CRM State (FU3)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Sync CRM State (FU3)": {
+      "main": [
+        [
+          {
+            "node": "Check Reply (FU3)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check Reply (FU3)": {
+      "main": [
+        [
+          {
+            "node": "Continue Sequence? (FU3)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Continue Sequence? (FU3)": {
+      "main": [
+        [
+          {
+            "node": "Follow-Up Email 3 (Case Study)",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Sequence Stopped (FU3)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Follow-Up Email 3 (Case Study)": {
+      "main": [
+        [
+          {
+            "node": "Update CRM (Follow-up 3 Sent)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update CRM (Follow-up 3 Sent)": {
+      "main": [
+        [
+          {
+            "node": "Wait 4 Days",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait 4 Days": {
+      "main": [
+        [
+          {
+            "node": "Sync CRM State (FU4)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Sync CRM State (FU4)": {
+      "main": [
+        [
+          {
+            "node": "Check Reply (FU4)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check Reply (FU4)": {
+      "main": [
+        [
+          {
+            "node": "Continue Sequence? (FU4)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Continue Sequence? (FU4)": {
+      "main": [
+        [
+          {
+            "node": "Follow-Up Email 4 (Exclusive Offer)",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Sequence Stopped (FU4)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Follow-Up Email 4 (Exclusive Offer)": {
+      "main": [
+        [
+          {
+            "node": "Update CRM (Follow-up 4 Sent)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update CRM (Follow-up 4 Sent)": {
+      "main": [
+        [
+          {
+            "node": "Wait 7 Days",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait 7 Days": {
+      "main": [
+        [
+          {
+            "node": "Sync CRM State (FU5)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Sync CRM State (FU5)": {
+      "main": [
+        [
+          {
+            "node": "Check Reply (FU5)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check Reply (FU5)": {
+      "main": [
+        [
+          {
+            "node": "Continue Sequence? (FU5)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Continue Sequence? (FU5)": {
+      "main": [
+        [
+          {
+            "node": "Follow-Up Email 5 (Final Follow-Up)",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Sequence Stopped (FU5)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Follow-Up Email 5 (Final Follow-Up)": {
+      "main": [
+        [
+          {
+            "node": "Update CRM (Completed)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false
+  },
+  "versionId": "910b54d6-abe9-49cf-a823-3782fefe6941",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "d650461bf274bd2ae7ffb32d2a0c91810c6dacecf11a629a692ca0ee303691c9"
+  },
+  "nodeGroups": [],
+  "id": "tukJdJ93ii6dnzt9",
+  "tags": [
+    {
+      "updatedAt": "2026-07-10T09:59:21.151Z",
+      "createdAt": "2026-07-10T09:59:21.151Z",
+      "id": "qHpFEfaYDs32NiyL",
+      "name": "important"
+    }
+  ]
+}
